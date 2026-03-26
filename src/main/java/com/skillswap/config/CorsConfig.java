@@ -8,19 +8,24 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
-/**
- * CORS configuration allowing React dev server to access backend APIs.
- */
 @Configuration
 public class CorsConfig {
 
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
+
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
+
+        // Allow localhost and Vercel frontend
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:3000",
+                "https://*.vercel.app"
+        ));
+
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
