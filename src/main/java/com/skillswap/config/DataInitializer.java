@@ -10,7 +10,8 @@ import com.skillswap.repository.UserOfferedSkillRepository;
 import com.skillswap.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,7 @@ import java.util.Random;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DataInitializer implements CommandLineRunner {
+public class DataInitializer {
 
     private static final String DEMO_PASSWORD = "password123";
 
@@ -41,9 +42,9 @@ public class DataInitializer implements CommandLineRunner {
     private final UserNeededSkillRepository neededSkillRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
+    @EventListener(ApplicationReadyEvent.class)
     @Transactional
-    public void run(String... args) {
+    public void run() {
         List<Skill> defaultSkills = List.of(
                 Skill.builder().name("Java").description("Object-oriented programming with Java").category("Programming").build(),
                 Skill.builder().name("Python").description("General-purpose programming and scripting").category("Programming").build(),
